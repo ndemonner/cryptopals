@@ -18,4 +18,13 @@ describe Cryptopals do
     result_bytes = Cryptopals::Operations.xor(bytes1, bytes2)
     Cryptopals::Coding.bytes_to_hex(result_bytes).should eq(hex3)
   end
+
+  it "Set 1, Challenge 3: Single-byte XOR cipher" do
+    cipher_text = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+    cipher_bytes = Cryptopals::Coding.hex_to_bytes(cipher_text)
+    xor_byte = Cryptopals::Operations.find_single_byte_xor_cipher(cipher_bytes)
+    plain_bytes = Cryptopals::Operations.xor(cipher_bytes, Bytes.new(cipher_bytes.size, xor_byte))
+    plain_text = String.new(plain_bytes)
+    plain_text.should eq("Cooking MC's like a pound of bacon")
+  end
 end
