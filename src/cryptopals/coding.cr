@@ -1,51 +1,33 @@
+require "base64"
+
 module Cryptopals
-  class Coding    
+  class Coding
     HEX_PATTERN = /\A[0-9a-f]*\z/i
-    BYTE_PATTERN = /[0-9a-f]{2}/i
-    MUST_BE_HEX = "`hexstring` must be hex-encoded string"
+    MUST_BE_HEX = "`hex` must be a valid hexstring (size multiple of 2 and /\A[0-9a-f]*\z/)"
     BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 
-    def self.hex_to_base64(hexstring : String)
-      encode_bytes_to_base64(hex_to_bytes(hexstring))
+    def self.hex_to_base64(hex : String) : String
+      bytes = hex_to_bytes(hex)
+      bytes_to_base64(bytes)
     end
 
-    def self.hex_to_bytes(hexstring : String)
-      raise MUST_BE_HEX unless hexstring.match(HEX_PATTERN)
-      hexstring.scan(BYTE_PATTERN).map { |chunk| chunk[0].to_u8(16) }
-    end
-
-    def self.encode_bytes_to_base64(bytes : Array(UInt8))
-      # Translated from the Java code on the Wikipedia article
-      String.build do |str|
-        i = 0
-        while i < bytes.size
-          b = (bytes[i] & 0xfc) >> 2
-          str << BASE64_CHARS[b]
-          b = (bytes[i] & 0x03) << 4
-          if (i + 1 < bytes.size)
-            b |= (bytes[i + 1] & 0xf0) >> 4
-            str << BASE64_CHARS[b]
-            b = (bytes[i + 1] & 0x0f) << 2
-            if (i + 2 < bytes.size)
-              b |= (bytes[i + 2] & 0xc0) >> 6
-              str << BASE64_CHARS[b]
-              b = bytes[i + 2] & 0x3f
-              str << BASE64_CHARS[b]
-            else
-              str << BASE64_CHARS[b]
-              str << "="
-            end
-          else
-            str << BASE64_CHARS[b]
-            str << "=="
-          end
-          i += 3
-        end
+    def self.hex_to_bytes(hex : String) : Bytes
+      raise MUST_BE_HEX unless (hex.size % 2 == 0) && hex.match(HEX_PATTERN)
+      Bytes.new(hex.bytesize / 2) do |i|
+        hex[i * 2, 2].to_u8(16)
       end
     end
 
-    def self.encode_bytes_to_hex(bytes : Array(UInt8))
-      bytes.map(&.to_s(16)).join("")
+    def self.bytes_to_base64(bytes : Bytes) : String
+      Base64.strict_encode(bytes)
+    end
+
+    def self.base64_to_bytes(encoded : String) : Bytes
+      Base64.decode(encoded)
+    end
+
+    def self.bytes_to_hex(bytes : Bytes) : String
+      bytes.hexstring
     end
   end
 end
