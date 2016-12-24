@@ -23,8 +23,19 @@ describe Cryptopals do
     cipher_text = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     cipher_bytes = Cryptopals::Coding.hex_to_bytes(cipher_text)
     xor_byte = Cryptopals::Operations.find_single_byte_xor_cipher(cipher_bytes)
-    plain_bytes = Cryptopals::Operations.xor(cipher_bytes, Bytes.new(cipher_bytes.size, xor_byte))
+    plain_bytes = Cryptopals::Operations.bytes_xor_byte(cipher_bytes, xor_byte)
     plain_text = String.new(plain_bytes)
     plain_text.should eq("Cooking MC's like a pound of bacon")
+  end
+
+  it "Set 1, Challenge 4: Detect single-character XOR" do
+    lines = File.read_lines(File.dirname(__FILE__) + "/data/s1_c4.txt")
+    lines.each do |line|
+      cipher_bytes = Cryptopals::Coding.hex_to_bytes(line)
+      if Cryptopals::Operations.likely_single_byte_xor_encrypted?(cipher_bytes)
+        cipher = Cryptopals::Operations.find_single_byte_xor_cipher(cipher_bytes)
+        puts String.new(Cryptopals::Operations.bytes_xor_byte(cipher_bytes, cipher))
+      end
+    end
   end
 end

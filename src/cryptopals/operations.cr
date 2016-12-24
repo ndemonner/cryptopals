@@ -37,5 +37,15 @@ module Cryptopals
         test_scores[key] > test_scores[acc] ? key : acc
       end
     end
+
+    def self.likely_single_byte_xor_encrypted?(bytes : Bytes) : Bool
+      cipher_byte = find_single_byte_xor_cipher(bytes);
+      plain_bytes = bytes_xor_byte(bytes, cipher_byte)
+      plain_bytes.all? { |byte| byte <= 127 }
+    end
+
+    def self.bytes_xor_byte(bytes : Bytes, key : UInt8) : Bytes
+      xor(bytes, Bytes.new(bytes.size, key))
+    end
   end
 end
