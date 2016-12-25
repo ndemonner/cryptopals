@@ -28,4 +28,10 @@ describe Cryptopals::Operations do
     cipher_bytes = Cryptopals::Operations.repeating_xor(plain_bytes, cipher)
     cipher_bytes.should eq(Bytes[24, 0, 26, 25, 0, 13])
   end
+
+  it "#hamming_distance" do
+    str1 = "this is a test"
+    str2 = "wokka wokka!!!"
+    Cryptopals::Operations.hamming_distance(str1.to_slice, str2.to_slice).should eq(37_u64)
+  end
 end

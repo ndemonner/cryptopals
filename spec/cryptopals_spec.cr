@@ -46,4 +46,12 @@ describe Cryptopals do
     cipher_text = Cryptopals::Coding.bytes_to_hex(cipher_bytes)
     cipher_text.should eq(expected_cipher_text)
   end
+
+  it "Set 1, Challenge 6: Break repeating-key XOR" do
+    file = File.read(File.dirname(__FILE__) + "/data/s1_c6.txt")
+    solution = File.read(File.dirname(__FILE__) + "/data/s1_c6_solution.txt")
+    cipher_bytes = Cryptopals::Coding.base64_to_bytes(file)
+    plain_bytes = Cryptopals::Operations.break_repeating_xor_encryption(cipher_bytes)
+    String.new(plain_bytes).should eq(solution)
+  end
 end
