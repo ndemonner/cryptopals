@@ -30,12 +30,12 @@ describe Cryptopals do
 
   it "Set 1, Challenge 4: Detect single-character XOR" do
     lines = File.read_lines(File.dirname(__FILE__) + "/data/s1_c4.txt")
-    lines.each do |line|
+    plain_texts = lines.map do |line|
       cipher_bytes = Cryptopals::Coding.hex_to_bytes(line)
-      if Cryptopals::Operations.likely_single_byte_xor_encrypted?(cipher_bytes)
-        cipher = Cryptopals::Operations.find_single_byte_xor_cipher(cipher_bytes)
-        puts String.new(Cryptopals::Operations.bytes_xor_byte(cipher_bytes, cipher))
-      end
+      cipher = Cryptopals::Operations.find_single_byte_xor_cipher(cipher_bytes)
+      plain_bytes = Cryptopals::Operations.bytes_xor_byte(cipher_bytes, cipher)
+      String.new(plain_bytes).chomp
     end
+    plain_texts.includes?("Now that the party is jumping").should be_true
   end
 end
