@@ -38,4 +38,12 @@ describe Cryptopals do
     end
     plain_texts.includes?("Now that the party is jumping").should be_true
   end
+
+  it "Set 1, Challenge 5: Implement repeating-key XOR" do
+    expected_cipher_text = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
+    plain_bytes = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal".to_slice
+    cipher_bytes = Cryptopals::Operations.repeating_xor(plain_bytes, "ICE".to_slice)
+    cipher_text = Cryptopals::Coding.bytes_to_hex(cipher_bytes)
+    cipher_text.should eq(expected_cipher_text)
+  end
 end

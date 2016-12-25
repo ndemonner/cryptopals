@@ -52,5 +52,11 @@ module Cryptopals
     def self.bytes_xor_byte(bytes : Bytes, key : UInt8) : Bytes
       xor(bytes, Bytes.new(bytes.size, key))
     end
+
+    def self.repeating_xor(plain_bytes : Bytes, key_bytes : Bytes) : Bytes
+      Bytes.new(plain_bytes.size) do |i|
+        plain_bytes[i] ^ key_bytes[i % key_bytes.size]
+      end
+    end
   end
 end

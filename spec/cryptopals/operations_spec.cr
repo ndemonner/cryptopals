@@ -20,5 +20,12 @@ describe Cryptopals::Operations do
     decrypted_bytes = Cryptopals::Operations.bytes_xor_byte(cipher_bytes, cipher)
     String.new(decrypted_bytes).should eq(plain_text)
   end
-end
 
+  it "#repeating_xor" do
+    plain_text = "secret"
+    plain_bytes = plain_text.to_slice
+    cipher = "key".to_slice
+    cipher_bytes = Cryptopals::Operations.repeating_xor(plain_bytes, cipher)
+    cipher_bytes.should eq(Bytes[24, 0, 26, 25, 0, 13])
+  end
+end
